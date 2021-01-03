@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Benchmark no React</title>
+
+    <style>
+        body {
+            text-align: center;
+
+            background-color: #282c34;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(10px + 2vmin);
+            color: white;
+        }
+
+        .SvgBenchmark {
+            border: 1px solid white;
+            width: 800px;
+            height: 600px;
+        }
+
+    </style>
+</head>
+<body>
+
+<svg class="SvgBenchmark" shape-rendering="geometricPrecision">
+    <defs>
+        <path id="player" d="M 0 -10 L 8 10 L 0 6 L -8 10 Z" fill="#00d" stroke="#88c" stroke-width="2" stroke-linejoin="round" />
+    </defs>
+</svg>
+
+<script type="module">
+    const players = new Map();
+    const elementsById = new Map();
+    const svg = document.querySelector("svg");
+
+    function createElement(player) {
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute("href", "#player");
+        updateTransform(use, player);
+        svg.appendChild(use);
+        return use;
+    }
+
+    function updateTransform(element, player) {
+        const translate = `translate(${player.x} ${player.y})`;
+        const rotate = `rotate(${player.a})`;
+        const transform = `${translate} ${rotate} scale(0.5)`;
+        element.setAttribute("transform", transform);
+    }
+
+    function update() {
+        const start = performance.now();
+        for (const player of players.values()) {
+            player.a += 10;
+            updateTransform(elementsById.get(player.i), player);
+        }
+        console.info(performance.now() - start);
+    }
+
+    for (let i = 0; i < 10000; i++) {
+        const x = Math.trunc(Math.random() * 800);
+        const y = Math.trunc(Math.random() * 600);
+        const a = Math.trunc(Math.random() * 306);
+        const player = {i,x,y,a};
+        players.set(i, player);
+        elementsById.set(i, createElement(player));
+    }
+
+    setInterval(update, 1000);
+</script>
+
+</body>
+</html>
