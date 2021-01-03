@@ -9,6 +9,10 @@ Tests made:
 - vanilla JS to render a 2D canvas
 - pixi.js to render a WebGL canvas
 
+I started this as an experiment to see if I could rely on React to load thousands of elements on the screen. If you google it, you'll find several articles on how you should not render thousands of elements but virtualize them in windows and etc. This is not the case with complex graphics scenarios, though, so I wanted to try and see how bad it was... and it was bad.
+
+I also took the chance to see if I could get away with using pixi.js to leverage WebGL instead of having to write a solution from scratch and I was surprise to see that it worked well - so well that I decided to expand on the idea and created a [separate project](https://github.com/luciopaiva/pixi-live-map) for exploring more complex scenarios.
+
 ## Installing and running
 
     nvm install
